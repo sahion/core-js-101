@@ -164,8 +164,8 @@ function unbracketTag(str) {
  *   'Thunderstruck' => 'THUNDERSTRUCK'
  *  'abcdefghijklmnopqrstuvwxyz' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
  */
-function convertToUpperCase(/* str */) {
-  throw new Error('Not implemented');
+function convertToUpperCase(str) {
+  return str.toUpperCase();
 }
 
 /**
@@ -183,8 +183,8 @@ function convertToUpperCase(/* str */) {
  *   ],
  *   'info@gmail.com' => ['info@gmail.com']
  */
-function extractEmails(/* str */) {
-  throw new Error('Not implemented');
+function extractEmails(str) {
+  return str.split(';');
 }
 
 /**
@@ -210,8 +210,33 @@ function extractEmails(/* str */) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  let result = '';
+
+  for (let i = 0; i < height; i += 1) {
+    if (i === 0) {
+      result += '┌';
+    } else if (i === height - 1) {
+      result += '└';
+    } else {
+      result += '│';
+    }
+
+    for (let j = 0; j < width - 2; j += 1) {
+      result += (i === 0 || i === height - 1) ? '─' : ' ';
+    }
+
+    if (i === 0) {
+      result += '┐';
+    } else if (i === height - 1) {
+      result += '┘';
+    } else {
+      result += '│';
+    }
+    result += '\n';
+  }
+
+  return result;
 }
 
 
@@ -231,8 +256,23 @@ function getRectangleString(/* width, height */) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  let result = '';
+
+  for (let i = 0; i < str.length; i += 1) {
+    const letterCode = str[i].charCodeAt();
+    const newLetterCode = letterCode + 13;
+    if (letterCode > 96 && newLetterCode > 122) {
+      result += String.fromCharCode(((newLetterCode) % 122) + 96);
+    } else if (letterCode > 64 && newLetterCode > 90 && letterCode < 91) {
+      result += String.fromCharCode((newLetterCode % 90) + 64);
+    } else if ((letterCode > 64 && letterCode < 91) || (letterCode > 96 && letterCode < 123)) {
+      result += String.fromCharCode(newLetterCode);
+    } else {
+      result += str[i];
+    }
+  }
+  return result;
 }
 
 /**
@@ -248,8 +288,8 @@ function encodeToRot13(/* str */) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  return (typeof value === 'string' || value instanceof String);
 }
 
 
@@ -277,8 +317,68 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  let result = 0;
+
+  let rank = '';
+  let suit = '';
+
+  if (value.length !== 3) {
+    [rank, suit] = value.split('');
+  } else {
+    let r1 = '';
+    let r2 = '';
+    [r1, r2, suit] = value.split('');
+    rank = r1 + r2;
+  }
+
+  switch (suit) {
+    case '♣':
+      result += 0;
+      break;
+
+    case '♦':
+      result += 13;
+      break;
+
+    case '♥':
+      result += 26;
+      break;
+
+    case '♠':
+      result += 39;
+      break;
+
+    default:
+      break;
+  }
+
+  if (!Number.isNaN(+rank)) {
+    result += +rank - 1;
+  } else {
+    switch (rank) {
+      case 'A':
+        result += 0;
+        break;
+
+      case 'J':
+        result += 10;
+        break;
+
+      case 'Q':
+        result += 11;
+        break;
+
+      case 'K':
+        result += 12;
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  return result;
 }
 
 
